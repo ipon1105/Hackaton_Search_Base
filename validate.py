@@ -8,14 +8,14 @@ from time import time
 
 if __name__ == "__main__":
 
-    base_obj = SearchBase()
-    base_set_time = 0
-    t0 = time()
-    base_obj.set_base_from_pickle()
-    t1 = time()
-    base_obj.cal_base_speed()
-    set_base_metric = t1 - t0
-    print(f"Base data init metric: {set_base_metric}")
+    #base_obj = SearchBase()
+    #base_set_time = 0
+    #t0 = time()
+    #base_obj.set_base_from_pickle()
+    #t1 = time()
+    #base_obj.cal_base_speed()
+    #set_base_metric = t1 - t0
+    #print(f"Base data init metric: {set_base_metric}")
 
     sol_obj = SearchSolution()
     t0 = time()

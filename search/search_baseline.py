@@ -6,7 +6,6 @@ from typing import List, Tuple
 from config import Config as cfg 
 from .search import Base
 
-
 class SearchBase(Base):
     ''' SearchBase class implements 
     search through the database to find matching
@@ -48,6 +47,7 @@ class SearchBase(Base):
         self.ids = {} 
         for i, key in enumerate(data['reg']):
             self.reg_matrix[i] = data['reg'][key][0][None]
+            print(self.reg_matrix[i])
             self.ids[i] = key
 
         self.reg_matrix = np.concatenate(self.reg_matrix, axis=0)        
@@ -64,10 +64,17 @@ class SearchBase(Base):
         samples = cfg.samples 
         N, C, C_time, T_base = 0, 0, 0, 0
         for i, tup in enumerate(tqdm(self.pass_dict.items(), total=samples)):
+            #tup - кортеж (номер, массив)
 
+            #passes - два массива по float16;
+            #idx - порядковый номер
             idx, passes = tup
-            for q  in passes:
+
+            #q - Один эмбендинг
+            for q in passes:
                 t0 = time.time()
+
+                #c_output - Новая выходная матрица
                 c_output = self.search(query=q) 
                 t1 = time.time()
                 T_base += (t1 - t0)
@@ -81,14 +88,18 @@ class SearchBase(Base):
             if i > samples:
                 break
 
+        # Базовая скорость =  делить на Количество итераций
         base_speed = T_base / N
         print(f"Base Line Speed: {base_speed}")
         print(f"Base Line Accuracy: {C / N * 100}")
+
+        # Попытка сохранения
         with open(base_speed_path, 'wb') as f:
             pickle.dump(base_speed, f)
 
     # @profile
     def search(self, query: np.array) -> List[Tuple]:
+        #print(query)
         '''
         Baseline search algorithm. 
         Uses simple matrix multiplication
@@ -111,4 +122,6 @@ class SearchBase(Base):
         self.reg_matrix = np.concatenate(self.reg_matrix, feature, axis=0) 
 
     def cos_sim(self, query: np.array) -> np.array:
+        #print('cos_sim')
+        #print(np.dot(self.reg_matrix, query))
         return np.dot(self.reg_matrix, query)
