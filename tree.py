@@ -1,12 +1,14 @@
 import numpy as np
-import random
+from typing import List, Tuple
+from numpy.linalg import norm
 
 RED = 'RED'
 BLACK = 'BLACK'
 
+
 class RBNode:
     def __init__(self, tup=None, parent=None, color=RED):
-        self.num,  self.hash, self.vec = tup
+        self.num, self.vec = tup
 
         self.color = color
         self.parent = parent
@@ -38,9 +40,15 @@ class RBNode:
 
 
 class RBTree:
+    numerate = 0
+    tmp_1 = np.float32()
+    tmp_2 = 0
+    tmp_3 = []
+
     def __init__(self):
         self.root = None
         self.size = 0
+
 
     def isRed(self, node):
         # Текущий узел существует и красный
@@ -78,7 +86,7 @@ class RBTree:
 
     # Вставка по сумме
     def insert(self, tup):
-        num, hash, vec = tup
+        num, vec = tup
 
         if self.root is None:
             self.root = RBNode(tup)
@@ -86,21 +94,24 @@ class RBTree:
             self._insert(self.root)
             return
         # Найдите родительский узел
+
         parent = self.root
         node = self.root
         flag = 0
+
         while node:
             parent = node
 
-            if hash > node.hash:
+            res = np.dot(vec, node.vec) / (norm(vec) * norm(node.vec))
+
+            if res > 0:
                 node = node.right
                 flag = 0
-            elif hash < node.hash:
+            elif res < 0:
                 node = node.left
                 flag = 1
             else:
                 node.num = num
-                node.hash = hash
                 node.vec = vec
                 return
 
@@ -182,38 +193,31 @@ class RBTree:
             self.preOrder(subtree.right)
 
     # Поиск, наиболее важная функция
-    def _search(self, subtree, hash):
-        if subtree is None:
-            return None
+    def _search(self, subtree, vec):
 
-        if hash < sum(subtree.key):
-            return self._search(subtree.left, hash)
-        elif hash > sum(subtree.key):
-            return self._search(subtree.right, hash)
+        if subtree == self.root:
+            self.tmp_1 = -1
+            self.tmp_2 = -1
+            self.tmp_3 = []
+
+        if subtree is None:
+            return [(self.tmp_2, self.tmp_3)]
+
+        res = np.dot(vec, subtree.vec) / (norm(vec) * norm(subtree.vec))
+
+        if res > self.tmp_1:
+            tmp_2 = subtree.num
+            tmp_3 = subtree.vec
+
+        if res < 0:
+            return self._search(subtree.left, vec)
+        elif res > 0:
+            return self._search(subtree.right, vec)
         else:
-            return subtree.num, subtree.vec
+            return [(tmp_2, tmp_3)]
         pass
 
 #tup содержит: Номер, Хэш, Вектор
 def add(tree, tup):
     tree.insert(tup)
     return tree
-
-# a = [(i, generation()) for i in range(1, 11)]
-# tree = RBTree()
-# tup = (1, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (2, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (3, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (4, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (5, generation())
-# print(tup)
-# add(tree, tup)
-# tree.preOrder(tree.root)

@@ -29,19 +29,15 @@ class SearchSolution(Base):
 
         self.ids = {}
         for i, key in enumerate(data['reg']):
-            tree.add(self.myTree, (i, sum(data['reg'][key][0][None][0]), data['reg'][key][0][None][0]))
+            tree.add(self.myTree, (i, data['reg'][key][0][None][0]))
             self.ids[i] = key
 
         self.pass_dict = data['pass']
-
-        #self.reg_matrix[i] = data['reg'][key][0][None]
-        #self.reg_matrix = [None] * len(data['reg'])
-        #self.reg_matrix = np.concatenate(self.reg_matrix, axis=0)
         pass
 
     #Данная функция должна вернуть вектор кортежей (номер, массив)
     def search(self, query: np.array) -> List[Tuple]:
-        return [self.myTree._search(self.myTree, sum(query))]
+        return self.myTree._search(self.myTree.root, query)
         pass
 
     def cos_sim(self, query: np.array) -> np.array:
