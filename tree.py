@@ -4,7 +4,6 @@ import random
 RED = 'RED'
 BLACK = 'BLACK'
 
-
 class RBNode:
     def __init__(self, tup=None, parent=None, color=RED):
         self.num,  self.hash, self.vec = tup
