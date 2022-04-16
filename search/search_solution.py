@@ -41,7 +41,7 @@ class SearchSolution(Base):
 
     #Данная функция должна вернуть вектор кортежей (номер, массив)
     def search(self, query: np.array) -> List[Tuple]:
-        return [self.myTree._search(self.myTree, sum(query))]
+        return self.myTree._search(self.myTree.root, sum(query))
         pass
 
     def cos_sim(self, query: np.array) -> np.array:

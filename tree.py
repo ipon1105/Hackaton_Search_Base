@@ -1,5 +1,5 @@
 import numpy as np
-import random
+from typing import List, Tuple
 
 RED = 'RED'
 BLACK = 'BLACK'
@@ -187,34 +187,20 @@ class RBTree:
         if subtree is None:
             return None
 
-        if hash < sum(subtree.key):
+        # SUDO: Гавнокодим
+        if abs(hash - sum(subtree.vec)) < 0.01:
+            return [(subtree.num, subtree.vec)]
+        # END SUDO
+
+        if hash < sum(subtree.vec):
             return self._search(subtree.left, hash)
-        elif hash > sum(subtree.key):
+        elif hash > sum(subtree.vec):
             return self._search(subtree.right, hash)
         else:
-            return subtree.num, subtree.vec
+            return [(subtree.num, subtree.vec)]
         pass
 
 #tup содержит: Номер, Хэш, Вектор
 def add(tree, tup):
     tree.insert(tup)
     return tree
-
-# a = [(i, generation()) for i in range(1, 11)]
-# tree = RBTree()
-# tup = (1, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (2, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (3, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (4, generation())
-# print(tup)
-# add(tree, tup)
-# tup = (5, generation())
-# print(tup)
-# add(tree, tup)
-# tree.preOrder(tree.root)
