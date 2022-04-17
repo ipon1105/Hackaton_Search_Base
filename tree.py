@@ -1,3 +1,4 @@
+import numpy
 import numpy as np
 from typing import List, Tuple
 from numpy.linalg import norm
@@ -48,6 +49,8 @@ class RBTree:
         self.root = None
         self.size = 0
 
+    def getSize(self):
+        return self.size
 
     def isRed(self, node):
         # Текущий узел существует и красный
@@ -191,29 +194,35 @@ class RBTree:
             self.preOrder(subtree.left)
             self.preOrder(subtree.right)
 
+    def search(self, subtree, vec):
+        list = []
+
+        self._search(subtree, vec, list)
+
+        return list
+        pass
+
     # Поиск, наиболее важная функция
-    def _search(self, subtree, vec):
-
-        if subtree == self.root:
-            self.tmp_1 = -1
-            self.tmp_2 = -1
-            self.tmp_3 = []
-
+    def _search(self, subtree, vec, list):
         if subtree is None:
-            return [(self.tmp_2, self.tmp_3)]
+            return list
 
         res = np.dot(vec, subtree.vec) / (norm(vec) * norm(subtree.vec))
 
-        if res > self.tmp_1:
-            tmp_2 = subtree.num
-            tmp_3 = subtree.vec
+        if res > 0.4:
+            list.append([subtree.num, subtree.vec])
+
+        if abs(res) < 0.06:
+            self._search(subtree.left, vec, list)
+            self._search(subtree.right, vec, list)
+            return list
 
         if res < 0:
-            return self._search(subtree.left, vec)
+            return self._search(subtree.left, vec, list)
         elif res > 0:
-            return self._search(subtree.right, vec)
+            return self._search(subtree.right, vec, list)
         else:
-            return [(tmp_2, tmp_3)]
+            return list
         pass
 
 #tup содержит: Номер, Хэш, Вектор

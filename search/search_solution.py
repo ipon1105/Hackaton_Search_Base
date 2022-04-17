@@ -4,6 +4,7 @@ import numpy as np
 from .search import Base
 from typing import List, Tuple
 import tree
+import random
 import pickletools
 
 class SearchSolution(Base):
@@ -37,7 +38,8 @@ class SearchSolution(Base):
 
     #Данная функция должна вернуть вектор кортежей (номер, массив)
     def search(self, query: np.array) -> List[Tuple]:
-        return self.myTree._search(self.myTree.root, query)
+        arr = self.myTree.search(self.myTree.root, query)
+        return arr
         pass
 
     def cos_sim(self, query: np.array) -> np.array:
