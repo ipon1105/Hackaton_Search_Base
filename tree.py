@@ -38,7 +38,6 @@ class RBNode:
             return None
         return self.parent.sibling()
 
-
 class RBTree:
     numerate = 0
     tmp_1 = np.float32()
